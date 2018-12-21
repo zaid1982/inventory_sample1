@@ -21,7 +21,8 @@ class Class_sql {
         try {     
             if ($title == 'vw_roles') { 
                 $sql = "SELECT
-                        ref_role.role_id, ref_role.role_desc
+                        ref_role.role_id AS roleId, 
+                        ref_role.role_desc AS roleDesc
                     FROM sys_user_role
                     INNER JOIN ref_role ON sys_user_role.role_id = ref_role.role_id AND role_status = 1";
             } else

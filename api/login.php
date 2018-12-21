@@ -31,10 +31,13 @@ try {
         } else if ($sys_user['user_status'] !== '1') {
             throw new Exception('(ErrCode:2003) [' . __LINE__ . '] - User ID inactive. Please contact adminsitrator.', 31);
         }
+        
         $user_id = $sys_user['user_id'];
+        $group_id = $sys_user['group_id'];
             
         //$token = $fn_login->create_jwt('sa');        
         $arr_roles = Class_db::getInstance()->db_select('vw_roles', array('sys_user_role.user_id'=>$user_id));
+        $sys_group = Class_db::getInstance()->db_select_single('sys_group', array('group_id'=>$group_id), NULL, 1);
         // menu
         
         $result['token'] = $token;
@@ -42,9 +45,15 @@ try {
         $result['userFirstName'] = $sys_user['user_first_name'];
         $result['userLastName'] = $sys_user['user_last_name'];
         $result['userType'] = $sys_user['user_type'];
+        $result['isFirstTime'] = is_null($sys_user['user_time_activate']) ? 'Yes' : 'No';
         $result['userVersion'] = $sys_user['user_version'];
         $result['userMenuVersion'] = $sys_user['user_menu_version'];
         $result['roles'] = $arr_roles;
+        $result['group']['groupId'] = $sys_group['group_id'];
+        $result['group']['groupName'] = $sys_group['group_name'];
+        $result['group']['groupType'] = $sys_group['group_type'];
+        $result['group']['groupRegNo'] = $fn_general->clear_null($sys_group['group_reg_no']);
+        $result['group']['groupStatus'] = $sys_group['group_status'];
         
         // insert audit
         

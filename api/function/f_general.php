@@ -58,9 +58,12 @@ class Class_general {
         error_log($debugMsg, 3, $this->log_dir.'/error/error'.date("Ymd").'.log');
     }
     
-    public function task_claim ($user_id, $wfTask_id) {
+    public function clear_null ($param) {
         try {
-            return Class_db::getInstance()->db_update('wf_task', array('wfTask_claimedBy'=>$user_id, 'wftask_timeClaimed'=>'Now()'), array('wfTask_id'=>$wfTask_id));
+            if (is_null($param)) {
+                return '';
+            }
+            return $param;
         }
         catch(Exception $ex) {
             $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
