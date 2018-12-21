@@ -1,7 +1,10 @@
 <?php
-require_once 'function/general.php';
+require_once 'function/db.php';
+require_once 'function/f_general.php';
+require_once 'function/f_login.php';
 
 $fn_general = new Class_general();
+$fn_login = new Class_login();
 $api_name = 'api_login';
 $is_transaction = false;
 $form_data = array('success'=>false, 'result'=>'', 'error'=>'', 'errmsg'=>'');
@@ -18,7 +21,36 @@ try {
         $username = filter_input(INPUT_POST, 'username');
         $password = filter_input(INPUT_POST, 'password');        
         
-        $form_data['result'] = $username;
+        Class_db::getInstance()->db_connect();
+        
+        $sys_user = Class_db::getInstance()->db_select_single('sys_user', array('user_email'=>$username));
+        if (empty($sys_user)) {
+            throw new Exception('(ErrCode:2001) [' . __LINE__ . '] - User ID not exist', 31);
+        } else if ($sys_user['user_password'] !== md5($password)) {
+            throw new Exception('(ErrCode:2002) [' . __LINE__ . '] - Incorrect password', 31);
+        } else if ($sys_user['user_status'] !== '1') {
+            throw new Exception('(ErrCode:2003) [' . __LINE__ . '] - User ID inactive. Please contact adminsitrator.', 31);
+        }
+        $user_id = $sys_user['user_id'];
+            
+        //$token = $fn_login->create_jwt('sa');        
+        $arr_roles = Class_db::getInstance()->db_select('vw_roles', array('sys_user_role.user_id'=>$user_id));
+        // menu
+        
+        $result['token'] = $token;
+        $result['userId'] = $user_id;
+        $result['userFirstName'] = $sys_user['user_first_name'];
+        $result['userLastName'] = $sys_user['user_last_name'];
+        $result['userType'] = $sys_user['user_type'];
+        $result['userVersion'] = $sys_user['user_version'];
+        $result['userMenuVersion'] = $sys_user['user_menu_version'];
+        $result['roles'] = $arr_roles;
+        
+        // insert audit
+        
+        Class_db::getInstance()->db_close();
+        
+        $form_data['result'] = $result;
         $form_data['success'] = true;
     } 
     else {
@@ -26,9 +58,9 @@ try {
     }
 } catch (Exception $ex) {
     if ($is_transaction) {
-        //Class_db::getInstance()->db_rollback();
+        Class_db::getInstance()->db_rollback();
     }
-    //Class_db::getInstance()->db_close();
+    Class_db::getInstance()->db_close();
     $form_data['error'] = substr($ex->getMessage(), strpos($ex->getMessage(), '] - ') + 4);
     if ($ex->getCode() == 31) {
         $form_data['errmsg'] = substr($ex->getMessage(), strpos($ex->getMessage(), '] - ') + 4);

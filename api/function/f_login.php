@@ -1,13 +1,14 @@
 <?php
+require_once 'f_general.php';
 
-class Class_general {
+/* Error code range - 0100 */ 
+class Class_login {
      
-    private $log_dir = '';
+    private $fn_general;
     
     function __construct()
     {
-        $config = parse_ini_file('library/config.ini');
-        $this->log_dir = $config['log_dir'];
+        $this->fn_general = new Class_general();
     }
     
     private function get_exception($codes, $function, $line, $msg) {
@@ -47,24 +48,15 @@ class Class_general {
         else
             throw new Exception($this->get_exception('0004', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
     }
-           
-    public function log_debug ($function, $line, $msg) {
-        $debugMsg = date("Y/m/d h:i:sa")." [".__CLASS__.":".$function.":".$line."] - ".$msg."\r\n";
-        error_log($debugMsg, 3, $this->log_dir.'/debug/debug_'.date("Ymd").'.log');
-    }
-    
-    public function log_error ($function, $line, $msg) {
-        $debugMsg = date("Y/m/d h:i:sa")." [".__CLASS__.":".$function.":".$line."] - ".$msg."\r\n";
-        error_log($debugMsg, 3, $this->log_dir.'/error/error'.date("Ymd").'.log');
-    }
-    
-    public function task_claim ($user_id, $wfTask_id) {
+               
+    public function create_jwt ($user_id) {
         try {
-            return Class_db::getInstance()->db_update('wf_task', array('wfTask_claimedBy'=>$user_id, 'wftask_timeClaimed'=>'Now()'), array('wfTask_id'=>$wfTask_id));
+            throw new Exception('(ErrCode:9002) [' . __LINE__ . '] - test error');         
+            return '1';
         }
-        catch(Exception $e) {
-            error_log(date("Y/m/d h:i:sa")." [".__FILE__.":".__LINE__."] - ".$e->getMessage()."\r\n", 3, $this->log_dir.'/error/error_'.date("Ymd").'.log');
-            throw new Exception($this->get_exception('1301', __FUNCTION__, __LINE__, $e->getMessage()), $e->getCode());
+        catch(Exception $ex) {   
+            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
+            throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
     
