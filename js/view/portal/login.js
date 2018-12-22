@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
             name: 'User ID',
             validator: {
                 notEmpty: true,
-                maxLength: 30
+                maxLength: 100,
+                email: true
             }
         },
         {
@@ -47,13 +48,11 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function (){
             try {
                 if (formLgnLoginValidate.validateForm()) {
-                    // get token and store to sessionStorage
                     let data = {username : $('#txtLgnUsername').val(), password : $('#txtLgnPassword').val()};
-                    sessionStorage.setItem('token', 'uiiuiu');
-                    const respLogin = mzAjaxRequest('login.php', 'POST', data);
-                    
-                    //localStorage.setItem('userInfo', JSON.stringify(user));
-                    //window.location.href = '../home/home.html';
+                    const respLogin = mzAjaxRequest('login.php', 'POST', data);                   
+                    sessionStorage.setItem('token', respLogin.token); 
+                    localStorage.setItem('userInfo', JSON.stringify(respLogin));
+                    window.location.href = '../home/home.html';
                 } else {
                     toastr['error'](_VALIDATION_MSG, _VALIDATION_ERROR)
                 }

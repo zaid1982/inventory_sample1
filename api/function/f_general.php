@@ -67,7 +67,44 @@ class Class_general {
         }
         catch(Exception $ex) {
             $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
-            throw new Exception($this->get_exception('0005', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+            throw new Exception($this->get_exception('0051', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+        }
+    }
+    
+    public function save_audit ($audit_action_id='', $user_id='', $remark='') {
+        try {
+            if ($audit_action_id == '') {
+                throw new Exception('(ErrCode:0052) [' . __LINE__ . '] - Parameter audit_action_id empty');   
+            }
+            $place = '';
+            $ipaddress = '';
+            $this->log_debug(__FUNCTION__, __LINE__, 'Insert Audit Trail, audit_action_id = '.$audit_action_id.', user_id = '.$user_id.', remark = '.$remark);
+            if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']!='') {
+                $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+            } else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']!='') {
+                $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else if(isset($_SERVER['HTTP_X_FORWARDED']) && $_SERVER['HTTP_X_FORWARDED']!='') {
+                $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+            } else if(isset($_SERVER['HTTP_FORWARDED_FOR']) && $_SERVER['HTTP_FORWARDED_FOR']!='') {
+                $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+            } else if(isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED']!='') {
+                $ipaddress = $_SERVER['HTTP_FORWARDED'];
+            } else if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']!='') {
+                $ipaddress = $_SERVER['REMOTE_ADDR'];
+            } else {
+                $ipaddress = 'UNKNOWN';
+            }
+            if (!in_array($ipaddress, array('', 'UNKNOWN', '::1'), true)) {
+                $details = json_decode(file_get_contents("http://ipinfo.io/$ipaddress/json"));
+                if (isset($details->city)) {
+                    $place = $details->city;
+                }
+            }
+            return Class_db::getInstance()->db_insert('sys_audit', array('audit_action_id'=>$audit_action_id, 'user_id'=>$user_id, 'audit_ip'=>$ipaddress, 'audit_place'=>$place, 'audit_remark'=>$remark));
+        }
+        catch(Exception $ex) {
+            $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
+            throw new Exception($this->get_exception('0053', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
     

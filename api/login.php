@@ -35,11 +35,10 @@ try {
         $user_id = $sys_user['user_id'];
         $group_id = $sys_user['group_id'];
             
-        //$token = $fn_login->create_jwt('sa');        
+        $token = $fn_login->create_jwt($username);        
         $arr_roles = Class_db::getInstance()->db_select('vw_roles', array('sys_user_role.user_id'=>$user_id));
         $sys_group = Class_db::getInstance()->db_select_single('sys_group', array('group_id'=>$group_id), NULL, 1);
-        // menu
-        
+                
         $result['token'] = $token;
         $result['userId'] = $user_id;
         $result['userFirstName'] = $sys_user['user_first_name'];
@@ -54,9 +53,14 @@ try {
         $result['group']['groupType'] = $sys_group['group_type'];
         $result['group']['groupRegNo'] = $fn_general->clear_null($sys_group['group_reg_no']);
         $result['group']['groupStatus'] = $sys_group['group_status'];
+        $result['menu'] = $fn_login->get_menu_list($arr_roles);        
         
-        // insert audit
+        Class_db::getInstance()->db_beginTransaction();
+        $is_transaction = true;
         
+        $fn_general->save_audit('1', $user_id);
+        
+        Class_db::getInstance()->db_commit();        
         Class_db::getInstance()->db_close();
         
         $form_data['result'] = $result;

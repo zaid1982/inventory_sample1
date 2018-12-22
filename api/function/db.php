@@ -237,8 +237,8 @@ class Class_db{
     {
         try { 
             if (!empty($this->DBH)){
-                $where_str = "";
-                if (!empty($columns)){  $where_str = $this->get_whereAnd_str($columns); } 
+                $where_str = '';
+                if (!empty($columns)){ $where_str = $this->get_whereAnd_str($columns); } 
                 if ($orderby != '')  { $orderby = ' ORDER BY '.$orderby; }
                 if ($limit != '')    { $limit = ' LIMIT '.$limit; }
                 else                 { $limit = ' '; }
@@ -267,7 +267,7 @@ class Class_db{
     {
         try { 
             if (!empty($this->DBH)){
-                $where_str = "";
+                $where_str = '';
                 if (!empty($columns)){  $where_str = $this->get_whereAnd_str($columns); }  
                 $orderby != '' ? $orderby = ' ORDER BY '.$orderby : $orderby = '';
                 $sql = $this->get_sql($tablename, $sqlParam).$where_str.$orderby." LIMIT 1";
@@ -295,7 +295,7 @@ class Class_db{
     {
         try { 
             if (!empty($this->DBH)){
-                $where_str = "";
+                $where_str = '';
                 if (!empty($columns)){  $where_str = $this->get_whereAnd_str($columns); } 
                 $orderby != '' ? $orderby = ' ORDER BY '.$orderby : $orderby = '';
                 $sql = $this->get_sql($tablename,$sqlParam).$where_str.$orderby." LIMIT 1";
@@ -331,7 +331,7 @@ class Class_db{
         try { 
             if (!empty($this->DBH)){
                 $arrCols = array();
-                $where_str = "";
+                $where_str = '';
                 if (!empty($columns)){  $where_str = $this->get_whereAnd_str($columns); } 
                 $orderby != '' ? $orderby = ' ORDER BY '.$orderby : $orderby = '';
                 $sql = $this->get_sql($tablename,$sqlParam).$where_str.$orderby;
@@ -366,7 +366,7 @@ class Class_db{
     {
         try { 
             if (!empty($this->DBH)){
-                $where_str = "";
+                $where_str = '';
                 if (!empty($columns)){  $where_str = $this->get_whereAnd_str($columns); } 
                 if ($orderby != '')  { $orderby = ' ORDER BY '.$orderby; }
                 if ($limit != '')    { $limit = ' LIMIT '.$limit; }
@@ -404,7 +404,7 @@ class Class_db{
         try { 
             if (!empty($this->DBH)){
                 $this->log_debug(__FUNCTION__, __LINE__, $tablename);
-                $where_str = "";
+                $where_str = '';
                 if (!empty($columns)){  $where_str = $this->get_whereAnd_str($columns); } 
                 $sortCol == '0' ? $sortCol = $sortDef : $sortCol = $sortCol.' '.$sortDir;
                 $limitStart == '' ? $limit = '' : $limit = " LIMIT ".$limitStart.",".$tableLimit;
@@ -431,7 +431,7 @@ class Class_db{
     {
         try {
             if (!empty($this->DBH)){
-                $where_str = "";
+                $where_str = '';
                 if (!empty($columns))  
                     $where_str = $this->get_whereAnd_str($columns); 
                 //$sql = "SELECT count(*) FROM ".$this->get_sql($tablename, $sqlParam).$where_str;
@@ -454,7 +454,7 @@ class Class_db{
     {
         try {
             if (!empty($this->DBH)){
-                $where_str = "";
+                $where_str = '';
                 if (!empty($columns))  
                     $where_str = $this->get_whereAnd_str($columns); 
                 $sql = "SELECT COUNT(*) FROM ".$tablename." ".$where_str;
