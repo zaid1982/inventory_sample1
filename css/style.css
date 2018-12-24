@@ -1,1 +1,9 @@
 /* Your custom styles */
+.intro-2 {
+    background: url("../img/background/tree-and-cloud.jpg")no-repeat center center;
+    background-size: cover;
+}
+.pl-4_5 {
+    padding-left: 2.5rem !important;
+}
+            

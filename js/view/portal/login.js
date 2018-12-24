@@ -3,15 +3,26 @@ document.addEventListener('DOMContentLoaded', function() {
     ShowLoader();
     setTimeout(function (){
         HideLoader();
-    }, 300);
+    }, 200);
 
-    // logout notification
-    if ($('#logoutReason').val() === '0')
-        toastr['success'](_ALERT_LOGOUT, _ALERT_SUCCESS);
-    else if ($('#logoutReason').val() === '1')
-        toastr['error'](_ALERT_LOGOUT_ERROR, _ALERT_ERROR);
-    else if ($('#logoutReason').val() === '2')
-        toastr['error'](_ALERT_LOGOUT_TIMEOUT, _ALERT_ERROR);
+    // display notification
+    const getVar = getUrlVars()['f'];
+    if (typeof getVar !== 'undefined') {
+        switch (getVar) {
+            case '0':
+                toastr['success'](_ALERT_LOGOUT, _ALERT_SUCCESS);
+                break;
+            case '1':
+                toastr['error'](_ALERT_LOGOUT_ERROR, _ALERT_ERROR);
+                break;
+            case '2':
+                toastr['error'](_ALERT_LOGOUT_TIMEOUT, _ALERT_ERROR);
+                break;
+            case '3':
+                toastr['success'](_ALERT_REGISTER, _ALERT_SUCCESS);
+                break;
+        }
+    }
 
     const vDataLgn = [
         {
@@ -54,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     localStorage.setItem('userInfo', JSON.stringify(respLogin));
                     window.location.href = '../home/home.html';
                 } else {
-                    toastr['error'](_VALIDATION_MSG, _VALIDATION_ERROR)
+                    toastr['error'](_VALIDATION_MSG, _VALIDATION_ERROR);
                 }
             } catch (e) {
                 if (e.message !== 'error')   toastr['error'](e.message, _ALERT_ERROR);

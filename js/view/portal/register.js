@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ShowLoader();
     setTimeout(function () {
         HideLoader();
-    }, 300);
+    }, 200);
 
     const vDataReg = [
         {
@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
             name : "MyKad number",
             validator : {
                 notEmpty : true,
+                minLength : 12,
                 maxLength : 12,
                 digit : true
             }
@@ -71,21 +72,30 @@ document.addEventListener("DOMContentLoaded", function() {
             validator : {
                 notEmpty : true,
                 maxLength : 20,
-                minLength : 6
+                minLength : 6,
+                similar : {
+                    id: "txtRegPassword",
+                    label: "Password"
+                }
             }
         }
     ];
-    alert(vDataReg);
+    
     let formRegRegisterValidate = new mzValidate('formRegRegister');
     formRegRegisterValidate.registerFields(vDataReg);
-
+    
+    $('#formRegRegister').on('keyup', function() {
+        $('#btnRegSignUp').attr('disabled', !formRegRegisterValidate.validateForm());
+    });
+    
     $('#btnRegSignUp').on('click', function () {
         ShowLoader();
         setTimeout(function (){
             try {
                 if (formRegRegisterValidate.validateForm()) {
                     let data = {};
-                    const respRegister = mzAjaxRequest("", "POST", data);
+                    //const respRegister = mzAjaxRequest("", "POST", data);
+                    window.location.href = 'login.html?f=3';
                 } else {
                     toastr["error"](_VALIDATION_MSG, _VALIDATION_ERROR)
                 }

@@ -13,39 +13,50 @@ class Class_general {
     private function get_exception($codes, $function, $line, $msg) {
         if ($msg != '') {            
             $pos = strpos($msg,'-');
-            if ($pos !== false)   
+            if ($pos !== false) {   
                 $msg = substr($msg, $pos+2); 
+            }
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."] - ".$msg;
-        } else
+        } 
+        else {
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."]";
+        }
     }
     
     public function __get($property) {
-        if (property_exists($this, $property)) 
+        if (property_exists($this, $property)) {
             return $this->$property;
-        else
+        }
+        else {
             throw new Exception($this->get_exception('0001', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
+        }
     }
 
     public function __set( $property, $value ) {
-        if (property_exists($this, $property)) 
+        if (property_exists($this, $property)) {
             $this->$property = $value;        
-        else
+        }
+        else {
             throw new Exception($this->get_exception('0002', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
+        }
     }
     
     public function __isset( $property ) {
-        if (property_exists($this, $property)) 
+        if (property_exists($this, $property)) {
             return isset($this->$property);
-        else
+        }
+        else {
             throw new Exception($this->get_exception('0003', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
+        }
     }
     
     public function __unset( $property ) {
-        if (property_exists($this, $property)) 
+        if (property_exists($this, $property)) {
             unset($this->$property);
-        else
+        }
+        else {
             throw new Exception($this->get_exception('0004', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
+        }
     }
            
     public function log_debug ($function, $line, $msg) {
@@ -73,27 +84,36 @@ class Class_general {
     
     public function save_audit ($audit_action_id='', $user_id='', $remark='') {
         try {
+            $this->log_debug(__FUNCTION__, __LINE__, 'Insert Audit Trail, audit_action_id = '.$audit_action_id.', user_id = '.$user_id.', remark = '.$remark);
             if ($audit_action_id == '') {
                 throw new Exception('(ErrCode:0052) [' . __LINE__ . '] - Parameter audit_action_id empty');   
             }
+            
             $place = '';
             $ipaddress = '';
-            $this->log_debug(__FUNCTION__, __LINE__, 'Insert Audit Trail, audit_action_id = '.$audit_action_id.', user_id = '.$user_id.', remark = '.$remark);
+            
             if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']!='') {
                 $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-            } else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']!='') {
+            } 
+            else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']!='') {
                 $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } else if(isset($_SERVER['HTTP_X_FORWARDED']) && $_SERVER['HTTP_X_FORWARDED']!='') {
+            } 
+            else if(isset($_SERVER['HTTP_X_FORWARDED']) && $_SERVER['HTTP_X_FORWARDED']!='') {
                 $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-            } else if(isset($_SERVER['HTTP_FORWARDED_FOR']) && $_SERVER['HTTP_FORWARDED_FOR']!='') {
+            } 
+            else if(isset($_SERVER['HTTP_FORWARDED_FOR']) && $_SERVER['HTTP_FORWARDED_FOR']!='') {
                 $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-            } else if(isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED']!='') {
+            } 
+            else if(isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED']!='') {
                 $ipaddress = $_SERVER['HTTP_FORWARDED'];
-            } else if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']!='') {
+            } 
+            else if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']!='') {
                 $ipaddress = $_SERVER['REMOTE_ADDR'];
-            } else {
+            } 
+            else {
                 $ipaddress = 'UNKNOWN';
             }
+            
             if (!in_array($ipaddress, array('', 'UNKNOWN', '::1'), true)) {
                 $details = json_decode(file_get_contents("http://ipinfo.io/$ipaddress/json"));
                 if (isset($details->city)) {
