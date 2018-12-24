@@ -312,7 +312,7 @@ class Class_db{
             if (!empty($columns)) {  
                 $where_str = $this->get_whereAnd_str($columns);                 
             }  
-            if ($orderby !== '') {
+            if (!empty($orderby)) {
                 $orderby = ' ORDER BY '.$orderby;
             }
             $sql = $this->get_sql($tablename, $sqlParam).$where_str.$orderby." LIMIT 1";

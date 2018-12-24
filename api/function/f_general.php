@@ -66,7 +66,8 @@ class Class_general {
     
     public function log_error ($function, $line, $msg) {
         $debugMsg = date("Y/m/d h:i:sa")." [".__CLASS__.":".$function.":".$line."] - ".$msg."\r\n";
-        error_log($debugMsg, 3, $this->log_dir.'/error/error'.date("Ymd").'.log');
+        error_log($debugMsg, 3, $this->log_dir.'/debug/debug_'.date("Ymd").'.log');
+        error_log($debugMsg, 3, $this->log_dir.'/error/error_'.date("Ymd").'.log');
     }
     
     public function clear_null ($param) {
@@ -84,7 +85,7 @@ class Class_general {
     
     public function save_audit ($audit_action_id='', $user_id='', $remark='') {
         try {
-            $this->log_debug(__FUNCTION__, __LINE__, 'Insert Audit Trail, audit_action_id = '.$audit_action_id.', user_id = '.$user_id.', remark = '.$remark);
+            $this->log_debug(__FUNCTION__, __LINE__, 'Entering get_menu_list()');
             if ($audit_action_id == '') {
                 throw new Exception('(ErrCode:0052) [' . __LINE__ . '] - Parameter audit_action_id empty');   
             }
@@ -124,7 +125,7 @@ class Class_general {
         }
         catch(Exception $ex) {
             $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
-            throw new Exception($this->get_exception('0053', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+            throw new Exception($this->get_exception('0051', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
     

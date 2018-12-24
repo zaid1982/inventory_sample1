@@ -19,19 +19,26 @@ try {
     
     if ('POST' === $request_method) {
         $username = filter_input(INPUT_POST, 'username');
-        $password = filter_input(INPUT_POST, 'password');        
+        $password = filter_input(INPUT_POST, 'password');  
+        
+        if (is_null($username) || $username === '') { 
+            throw new Exception('(ErrCode:2001) [' . __LINE__ . '] - User ID empty', 31);         
+        } 
+        if (is_null($password) || $password === '') { 
+            throw new Exception('(ErrCode:2002) [' . __LINE__ . '] - Password empty', 31);         
+        }      
         
         Class_db::getInstance()->db_connect();
         
         $sys_user = Class_db::getInstance()->db_select_single('sys_user', array('user_email'=>$username));
         if (empty($sys_user)) {
-            throw new Exception('(ErrCode:2001) [' . __LINE__ . '] - User ID not exist', 31);
+            throw new Exception('(ErrCode:2003) [' . __LINE__ . '] - User ID not exist', 31);
         } 
         if ($sys_user['user_password'] !== md5($password)) {
-            throw new Exception('(ErrCode:2002) [' . __LINE__ . '] - Incorrect password', 31);
+            throw new Exception('(ErrCode:2004) [' . __LINE__ . '] - Incorrect password', 31);
         } 
         if ($sys_user['user_status'] !== '1') {
-            throw new Exception('(ErrCode:2003) [' . __LINE__ . '] - User ID inactive. Please contact adminsitrator.', 31);
+            throw new Exception('(ErrCode:2005) [' . __LINE__ . '] - User ID inactive. Please contact adminsitrator.', 31);
         }
         
         $userId = $sys_user['user_id'];
@@ -67,6 +74,7 @@ try {
         
         $form_data['result'] = $result;
         $form_data['success'] = true;
+        $fn_general->log_debug($api_name, __LINE__, 'Result = '.print_r($result, true));
     } 
     else {
         throw new Exception('(ErrCode:2000) [' . __LINE__ . '] - Wrong Request Method');   

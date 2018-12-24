@@ -59,7 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function (){
             try {
                 if (formLgnLoginValidate.validateForm()) {
-                    let data = {username : $('#txtLgnUsername').val(), password : $('#txtLgnPassword').val()};
+                    let data = {
+                        username : $('#txtLgnUsername').val(), 
+                        password : $('#txtLgnPassword').val()
+                    };
                     const respLogin = mzAjaxRequest('login.php', 'POST', data);                   
                     sessionStorage.setItem('token', respLogin.token); 
                     localStorage.setItem('userInfo', JSON.stringify(respLogin));

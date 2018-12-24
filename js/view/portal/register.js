@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
         {
             field_id : "txtRegFirstName",
             type : "text",
-            name : "First name",
+            name : "First Name",
             validator : {
                 notEmpty : true,
                 maxLength : 100
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
         {
             field_id : "txtRegLastName",
             type : "text",
-            name : "Last name",
+            name : "Last Name",
             validator : {
                 notEmpty : true,
                 maxLength : 100
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
         {
             field_id : "txtRegMyKad",
             type : "text",
-            name : "MyKad number",
+            name : "MyKad Number",
             validator : {
                 notEmpty : true,
                 minLength : 12,
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
         {
             field_id : "txtRegPhone",
             type : "text",
-            name : "Phone number",
+            name : "Phone Number",
             validator : {
                 notEmpty : true,
                 maxLength : 15,

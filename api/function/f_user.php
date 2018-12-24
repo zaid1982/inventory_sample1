@@ -57,25 +57,58 @@ class Class_user {
         }
         else {
             throw new Exception($this->get_exception('0004', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
-        }
+        } 
     }
                
-    public function register_user ($userDetails=array(), $type='') {
+    public function register_user ($userDetails=array(), $type=0) {
         try {
+            $this->fn_general->log_debug(__FUNCTION__, __LINE__, 'Entering register_user()');
             if (empty($userDetails)) {
-                throw new Exception('(ErrCode:0201) [' . __LINE__ . '] - Array userDetails empty');   
+                throw new Exception('(ErrCode:0202) [' . __LINE__ . '] - Array userDetails empty');   
+            }     
+            if (empty($type)) {
+                throw new Exception('(ErrCode:0203) [' . __LINE__ . '] - Parameter type empty');   
             }     
             if (!array_key_exists('userFirstName', $userDetails)) {
-                throw new Exception('(ErrCode:0202) [' . __LINE__ . '] - Index userFirstName in array userDetails empty');  
+                throw new Exception('(ErrCode:0204) [' . __LINE__ . '] - Index userFirstName in array userDetails empty');  
             }  
             if (!array_key_exists('userLastName', $userDetails)) {
-                throw new Exception('(ErrCode:0203) [' . __LINE__ . '] - Index userLastName in array userDetails empty');  
+                throw new Exception('(ErrCode:0205) [' . __LINE__ . '] - Index userLastName in array userDetails empty');  
+            } 
+            if (!array_key_exists('userEmail', $userDetails)) {
+                throw new Exception('(ErrCode:0206) [' . __LINE__ . '] - Index userEmail in array userDetails empty');  
+            } 
+            if (!array_key_exists('userMykadNo', $userDetails)) {
+                throw new Exception('(ErrCode:0207) [' . __LINE__ . '] - Index userMykadNo in array userDetails empty');  
+            } 
+            if (!array_key_exists('userProfileContactNo', $userDetails)) {
+                throw new Exception('(ErrCode:0208) [' . __LINE__ . '] - Index userProfileContactNo in array userDetails empty');  
+            } 
+            if (!array_key_exists('userPassword', $userDetails)) {
+                throw new Exception('(ErrCode:0209) [' . __LINE__ . '] - Index userPassword in array userDetails empty');  
+            }            
+            
+            $userFirstName = $userDetails['userFirstName'];
+            $userLastName = $userDetails['userLastName'];
+            $userEmail = $userDetails['userEmail'];
+            $userMykadNo = $userDetails['userMykadNo'];
+            $userProfileContactNo = $userDetails['userProfileContactNo'];
+            $userPassword = $userDetails['userPassword'];
+            
+            // insert sys_user
+            // insert sys_user_profile
+            // insert sys_user_role
+            // insert sys_group_user
+            // insert wfl_task_user
+            
+            if (Class_db::getInstance()->db_count('sys_user', array('user_email'=>$userEmail)) > 0) {
+                throw new Exception('(ErrCode:0210) [' . __LINE__ . '] - Email already exist. Please use different email.', 31);                     
             }
-            return $userId;
+            
+            return 'fdfdfd';
         }
         catch(Exception $ex) {   
-            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
-            throw new Exception($this->get_exception('0202', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+            throw new Exception($this->get_exception('0201', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
     

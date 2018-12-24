@@ -68,22 +68,24 @@ class Class_login {
                
     public function create_jwt ($username='') {
         try {
+            $this->fn_general->log_debug(__FUNCTION__, __LINE__, 'Entering create_jwt()');
             if ($username === '') {
-                throw new Exception('(ErrCode:0101) [' . __LINE__ . '] - Parameter username empty');   
+                throw new Exception('(ErrCode:0102) [' . __LINE__ . '] - Parameter username empty');   
             }
+            
             $key = "inventory_sample1";
             $token = array('iss'=>'inventory_sample1/jwt', 'username'=>$username, 'iat'=>time(), 'exp'=>time()+10);
             $jwt = JWT::encode($token, $key);              
             return $jwt;
         }
         catch(Exception $ex) {   
-            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
-            throw new Exception($this->get_exception('0102', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+            throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
     
     public function check_jwt ($jwt='') {
         try {
+            $this->fn_general->log_debug(__FUNCTION__, __LINE__, 'Entering check_jwt()');
             if ($jwt === '') {
                 throw new Exception('(ErrCode:0103) [' . __LINE__ . '] - Parameter jwt empty');   
             }
@@ -94,21 +96,20 @@ class Class_login {
             return $data;
         }
         catch(Exception $ex) {   
-            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
-            throw new Exception($this->get_exception('0104', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+            throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
     
     public function get_menu_list ($arr_roles='') {
         try {
+            $this->fn_general->log_debug(__FUNCTION__, __LINE__, 'Entering get_menu_list()');
             if ($arr_roles === '') {
-                throw new Exception('(ErrCode:0105) [' . __LINE__ . '] - Parameter arr_roles empty');  
+                throw new Exception('(ErrCode:0104) [' . __LINE__ . '] - Parameter arr_roles empty');  
             }
             if (empty($arr_roles)) {
-                throw new Exception('(ErrCode:0106) [' . __LINE__ . '] - Array arr_roles empty');  
+                throw new Exception('(ErrCode:0105) [' . __LINE__ . '] - Array arr_roles empty');  
             }
             
-            $this->fn_general->log_debug(__FUNCTION__, __LINE__, count($arr_roles));
             $role_list = array();
             foreach ($arr_roles as $roles) {
                 array_push($role_list, $roles['roleId']);
@@ -121,8 +122,8 @@ class Class_login {
             $nav_index = 0;
             $menu_list = Class_db::getInstance()->db_select('vw_menu', NULL, NULL, NULL, 1, array('roles'=>$role_str));
             foreach ($menu_list as $menu) {                
-                $this->fn_general->log_debug(__FUNCTION__, __LINE__, '$nav_page = '.$menu['nav_page']);
-                $this->fn_general->log_debug(__FUNCTION__, __LINE__, '$nav_index = '.$nav_index);
+                //$this->fn_general->log_debug(__FUNCTION__, __LINE__, '$nav_page = '.$menu['nav_page']);
+                //$this->fn_general->log_debug(__FUNCTION__, __LINE__, '$nav_index = '.$nav_index);
                 if (!is_null($menu['nav_page'])) {
                     array_push($menu_return, array('navId'=>$menu['nav_id'], 'navDesc'=>$menu['nav_desc'], 'navIcon'=>$menu['nav_icon'], 'navPage'=>$menu['nav_page'], 'navSecond'=>array()));
                     $nav_index++;
@@ -133,8 +134,7 @@ class Class_login {
             }
             return $menu_return;
         } catch (Exception $ex) {
-            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
-            throw new Exception($this->get_exception('0107', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+            throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
     
