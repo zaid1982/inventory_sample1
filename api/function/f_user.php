@@ -95,14 +95,27 @@ class Class_user {
             $userProfileContactNo = $userDetails['userProfileContactNo'];
             $userPassword = $userDetails['userPassword'];
             
-            // insert sys_user
-            // insert sys_user_profile
-            // insert sys_user_role
-            // insert sys_group_user
-            // insert wfl_task_user
-            
             if (Class_db::getInstance()->db_count('sys_user', array('user_email'=>$userEmail)) > 0) {
                 throw new Exception('(ErrCode:0210) [' . __LINE__ . '] - Email already exist. Please use different email.', 31);                     
+            }
+            
+            if ($type === 2) {
+                $userActivationKey = '';
+                $userId = Class_db::getInstance()->db_insert('sys_user', array('user_email'=>$userEmail, 'user_type'=>$type, 'user_password'=>$userPassword, 'user_activation_key'=>$userActivationKey,
+                    'user_first_name'=>$userFirstName, 'user_last_name'=>$userLastName, 'user_mykad_no'=>$userMykadNo, 'group_id'=>'2', 'user_status'=>'3'));
+                Class_db::getInstance()->db_insert('sys_user_profile', array('user_id'=>$userId, 'user_profile_contact_no'=>$userProfileContactNo));
+                Class_db::getInstance()->db_insert('sys_user_role', array('user_id'=>$userId, 'role_id'=>'2'));
+                Class_db::getInstance()->db_insert('sys_group_user', array('user_id'=>$userId, 'group_id'=>'2'));
+                $arr_checkpoint = Class_db::getInstance()->db_select('wfl_checkpoint', array('role_id'=>'2', 'checkpoint_type'=>'<>5'));
+                foreach ($arr_checkpoint as $checkpoint) {
+                    $checkpointId = $checkpoint['checkpoint_id'];
+                    $groupId = $checkpoint['group_id'];
+                    if ($groupId == '2' || is_null($groupId)) {
+                        Class_db::getInstance()->db_insert('wfl_checkpoint_user', array('user_id'=>$userId, 'checkpoint_id'=>$checkpointId));
+                    }
+                }
+            } else {
+                throw new Exception('(ErrCode:0211) [' . __LINE__ . '] - Parameter type invalid ('.$type.')');  
             }
             
             return 'fdfdfd';

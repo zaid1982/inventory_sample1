@@ -56,7 +56,8 @@ try {
         $result_register = $fn_user->register_user($userDetails, 1);
         
         // insert email
-        // save_audit
+        
+        $fn_general->save_audit('3', $userId);
         
         Class_db::getInstance()->db_commit();        
         Class_db::getInstance()->db_close();
