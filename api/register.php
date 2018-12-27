@@ -2,9 +2,11 @@
 require_once 'function/db.php';
 require_once 'function/f_general.php';
 require_once 'function/f_user.php';
+require_once 'function/f_email.php';
 
 $fn_general = new Class_general();
 $fn_user = new Class_user();
+$fn_email = new Class_email();
 $api_name = 'api_user';
 $is_transaction = false;
 $form_data = array('success'=>false, 'result'=>'', 'error'=>'', 'errmsg'=>'');
@@ -54,8 +56,11 @@ try {
             'userPassword'=>$userPassword
         );
         $result_register = $fn_user->register_user($userDetails, 1);
-        
-        // insert email
+        $userId = $result_register['userId'];
+        $activation_key = $result_register['activation_key'];
+                
+        $emailParam = array('fullname'=>$userFirstName.' '.$userLastName, 'username'=>$userEmail, 'activation_key'=>$activation_key); 
+        $fn_email->setup_email($userId, 1, $emailParam);
         
         $fn_general->save_audit('3', $userId);
         

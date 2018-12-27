@@ -100,9 +100,10 @@ class Class_user {
             }
             
             if ($type === 2) {
-                $userActivationKey = '';
-                $userId = Class_db::getInstance()->db_insert('sys_user', array('user_email'=>$userEmail, 'user_type'=>$type, 'user_password'=>$userPassword, 'user_activation_key'=>$userActivationKey,
-                    'user_first_name'=>$userFirstName, 'user_last_name'=>$userLastName, 'user_mykad_no'=>$userMykadNo, 'group_id'=>'2', 'user_status'=>'3'));
+                $userId = Class_db::getInstance()->db_insert('sys_user', array('user_email'=>$userEmail, 'user_type'=>$type, 'user_password'=>$userPassword, 'user_first_name'=>$userFirstName, 
+                    'user_last_name'=>$userLastName, 'user_mykad_no'=>$userMykadNo, 'group_id'=>'2', 'user_status'=>'3'));
+                $userActivationKey = $this->fn_general->generateRandomString().$userId;
+                Class_db::getInstance()->db_update('sys_user', array('user_activation_key'=>$userActivationKey), array('user_id'=>$userId));
                 Class_db::getInstance()->db_insert('sys_user_profile', array('user_id'=>$userId, 'user_profile_contact_no'=>$userProfileContactNo));
                 Class_db::getInstance()->db_insert('sys_user_role', array('user_id'=>$userId, 'role_id'=>'2'));
                 Class_db::getInstance()->db_insert('sys_group_user', array('user_id'=>$userId, 'group_id'=>'2'));

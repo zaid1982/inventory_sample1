@@ -129,4 +129,20 @@ class Class_general {
         }
     }
     
+    public function generateRandomString($length = 20) {
+        try {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        }
+        catch(Exception $ex) {
+            $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
+            throw new Exception($this->get_exception('0051', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+        }
+    }
+    
 }
