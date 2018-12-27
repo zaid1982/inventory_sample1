@@ -22,10 +22,10 @@ try {
         $password = filter_input(INPUT_POST, 'password');  
         
         if (is_null($username) || $username === '') { 
-            throw new Exception('(ErrCode:2001) [' . __LINE__ . '] - User ID empty', 31);         
+            throw new Exception('(ErrCode:2001) [' . __LINE__ . '] - Field User ID empty', 31);         
         } 
         if (is_null($password) || $password === '') { 
-            throw new Exception('(ErrCode:2002) [' . __LINE__ . '] - Password empty', 31);         
+            throw new Exception('(ErrCode:2002) [' . __LINE__ . '] - Field Password empty', 31);         
         }      
         
         Class_db::getInstance()->db_connect();
@@ -54,8 +54,6 @@ try {
         $result['userLastName'] = $sys_user['user_last_name'];
         $result['userType'] = $sys_user['user_type'];
         $result['isFirstTime'] = is_null($sys_user['user_time_activate']) ? 'Yes' : 'No';
-        $result['userVersion'] = $sys_user['user_version'];
-        $result['userMenuVersion'] = $sys_user['user_menu_version'];
         $result['roles'] = $arr_roles;
         $result['group']['groupId'] = $sys_group['group_id'];
         $result['group']['groupName'] = $sys_group['group_name'];

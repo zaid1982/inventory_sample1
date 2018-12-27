@@ -84,10 +84,10 @@ class Class_email {
                 if (!array_key_exists($paramCode, $emailParam)) {
                     throw new Exception('(ErrCode:0306) [' . __LINE__ . '] - Index '.paramCode.' in array emailParam empty');  
                 } 
-                if (strpos($emailTitle,"[".$item."]") !== false) {
+                if (strpos($emailTitle,"[".$paramCode."]") !== false) {
                     $emailTitle = str_replace ("[".$paramCode."]", $emailParam[$paramCode], $emailTitle);
                 }
-                if (strpos($emailHtml,"[".$item."]") !== false) {
+                if (strpos($emailHtml,"[".$paramCode."]") !== false) {
                     $emailHtml = str_replace ("[".$paramCode."]", $emailParam[$paramCode], $emailHtml);
                 }
             }
@@ -96,7 +96,8 @@ class Class_email {
                 'email_html'=>$emailHtml, 'user_id'=>$userId));
             return true;
         }
-        catch(Exception $ex) {   
+        catch(Exception $ex) {  
+            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage()); 
             throw new Exception($this->get_exception('0301', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }

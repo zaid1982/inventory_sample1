@@ -78,7 +78,8 @@ class Class_login {
             $jwt = JWT::encode($token, $key);              
             return $jwt;
         }
-        catch(Exception $ex) {   
+        catch(Exception $ex) {  
+            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage()); 
             throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
@@ -96,6 +97,7 @@ class Class_login {
             return $data;
         }
         catch(Exception $ex) {   
+            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
             throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }
@@ -134,6 +136,7 @@ class Class_login {
             }
             return $menu_return;
         } catch (Exception $ex) {
+            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
             throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }

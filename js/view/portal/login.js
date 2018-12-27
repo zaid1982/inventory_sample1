@@ -10,18 +10,36 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof getVar !== 'undefined') {
         switch (getVar) {
             case '0':
-                toastr['success'](_ALERT_LOGOUT, _ALERT_SUCCESS);
+                toastr['success'](_ALERT_MSG_SUCCESS_LOGOUT, _ALERT_TITLE_SUCCESS_LOGOUT);
                 break;
             case '1':
-                toastr['error'](_ALERT_LOGOUT_ERROR, _ALERT_ERROR);
+                toastr['error'](_ALERT_MSG_ERROR_LOGOUT, _ALERT_TITLE_ERROR);
                 break;
             case '2':
-                toastr['error'](_ALERT_LOGOUT_TIMEOUT, _ALERT_ERROR);
+                toastr['error'](_ALERT_MSG_ERROR_TIMEOUT, _ALERT_TITLE_ERROR_TIMEOUT);
                 break;
             case '3':
-                toastr['success'](_ALERT_REGISTER, _ALERT_SUCCESS);
+                toastr['success'](_ALERT_MSG_SUCCESS_REGISTER, _ALERT_TITLE_SUCCESS_REGISTER);
                 break;
         }
+    }
+    
+    // activate account
+    const getVarKey = getUrlVars()['key'];
+    if (typeof getVarKey !== 'undefined') {
+        setTimeout(function (){
+            try {
+                let data = {
+                    action : 'activate', 
+                    activationInput : getVarKey
+                };
+                mzAjaxRequest('register.php', 'POST', data);   
+                toastr['success'](_ALERT_MSG_SUCCESS_ACTIVATE, _ALERT_TITLE_SUCCESS_ACTIVATE);
+            } catch (e) {
+                toastr['error'](e.message, _ALERT_TITLE_ERROR_ACTIVATE);
+            }
+            HideLoader();
+        }, 300);        
     }
 
     const vDataLgn = [
@@ -68,10 +86,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     localStorage.setItem('userInfo', JSON.stringify(respLogin));
                     window.location.href = '../home/home.html';
                 } else {
-                    toastr['error'](_VALIDATION_MSG, _VALIDATION_ERROR);
+                    toastr['error'](_ALERT_MSG_VALIDATION, _ALERT_TITLE_VALIDATION_ERROR);
                 }
             } catch (e) {
-                if (e.message !== 'error')   toastr['error'](e.message, _ALERT_ERROR);
+                toastr['error'](e.message, _ALERT_TITLE_ERROR_LOGIN);
             }
             HideLoader();
         }, 300);

@@ -100,13 +100,12 @@ class Class_user {
             }
             
             if ($type === 2) {
-                $userId = Class_db::getInstance()->db_insert('sys_user', array('user_email'=>$userEmail, 'user_type'=>$type, 'user_password'=>$userPassword, 'user_first_name'=>$userFirstName, 
+                $userId = Class_db::getInstance()->db_insert('sys_user', array('user_email'=>$userEmail, 'user_type'=>strval($type), 'user_password'=>md5($userPassword), 'user_first_name'=>$userFirstName, 
                     'user_last_name'=>$userLastName, 'user_mykad_no'=>$userMykadNo, 'group_id'=>'2', 'user_status'=>'3'));
                 $userActivationKey = $this->fn_general->generateRandomString().$userId;
                 Class_db::getInstance()->db_update('sys_user', array('user_activation_key'=>$userActivationKey), array('user_id'=>$userId));
                 Class_db::getInstance()->db_insert('sys_user_profile', array('user_id'=>$userId, 'user_profile_contact_no'=>$userProfileContactNo));
                 Class_db::getInstance()->db_insert('sys_user_role', array('user_id'=>$userId, 'role_id'=>'2'));
-                Class_db::getInstance()->db_insert('sys_group_user', array('user_id'=>$userId, 'group_id'=>'2'));
                 $arr_checkpoint = Class_db::getInstance()->db_select('wfl_checkpoint', array('role_id'=>'2', 'checkpoint_type'=>'<>5'));
                 foreach ($arr_checkpoint as $checkpoint) {
                     $checkpointId = $checkpoint['checkpoint_id'];
@@ -119,9 +118,38 @@ class Class_user {
                 throw new Exception('(ErrCode:0211) [' . __LINE__ . '] - Parameter type invalid ('.$type.')');  
             }
             
-            return 'fdfdfd';
+            return array('userId'=>$userId, 'activationKey'=>$userActivationKey);
         }
         catch(Exception $ex) {   
+            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
+            throw new Exception($this->get_exception('0201', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
+        }
+    }
+    
+    public function activate_user ($activationInput='') {
+        try {
+            $this->fn_general->log_debug(__FUNCTION__, __LINE__, 'Entering activate_user()');
+            if (empty($activationInput)) {
+                throw new Exception('(ErrCode:0211) [' . __LINE__ . '] - Parameter activationInput empty');   
+            }    
+            if (strlen($activationInput) < 21) { 
+                throw new Exception('(ErrCode:0212) [' . __LINE__ . '] - Wrong activation key. Please click the activation link given from your email.', 31);    
+            }
+            
+            $userId = substr($activationInput, 20);
+            
+            if (Class_db::getInstance()->db_count('sys_user', array('user_id'=>$userId, 'user_activation_key'=>$activationInput)) == 0) {
+                throw new Exception('(ErrCode:0213) [' . __LINE__ . '] - Wrong activation key. Please click the activation link given from your email.', 31);                     
+            }
+            if (Class_db::getInstance()->db_count('sys_user', array('user_id'=>$userId, 'user_activation_key'=>$activationInput, 'user_status'=>'1')) == 1) {
+                throw new Exception('(ErrCode:0213) [' . __LINE__ . '] - Your account already activated. Please login with email as user ID and your registered password.', 31);                     
+            }
+                        
+            Class_db::getInstance()->db_update('sys_user', array('user_status'=>'1', 'user_time_activate'=>'Now()'), array('user_id'=>$userId));
+            return $userId;
+        }
+        catch(Exception $ex) {   
+            $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
             throw new Exception($this->get_exception('0201', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
     }

@@ -85,7 +85,7 @@ class Class_general {
     
     public function save_audit ($audit_action_id='', $user_id='', $remark='') {
         try {
-            $this->log_debug(__FUNCTION__, __LINE__, 'Entering get_menu_list()');
+            $this->log_debug(__FUNCTION__, __LINE__, 'Entering save_audit()');
             if ($audit_action_id == '') {
                 throw new Exception('(ErrCode:0052) [' . __LINE__ . '] - Parameter audit_action_id empty');   
             }
@@ -131,6 +131,7 @@ class Class_general {
     
     public function generateRandomString($length = 20) {
         try {
+            $this->log_debug(__FUNCTION__, __LINE__, 'Entering generateRandomString()');
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $charactersLength = strlen($characters);
             $randomString = '';

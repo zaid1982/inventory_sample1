@@ -1,12 +1,22 @@
-const _VALIDATION_ERROR = "VALIDATION ERROR";
-const _VALIDATION_MSG = "Please make sure all fields are valid.";
-const _ALERT_ERROR = "ERROR";
-const _ALERT_ERROR_MSG_DEFAULT = "Error on system. Please contact Administrator!";
-const _ALERT_SUCCESS = "SUCCESS";
-const _ALERT_LOGOUT = "You have successfully logout";
-const _ALERT_LOGOUT_ERROR = "An error has occurred. Please login again.";
-const _ALERT_LOGOUT_TIMEOUT = "Your session is expired. Please login again.";
-const _ALERT_REGISTER = "You have successfully registered. Please activate via link sent to your email.";
+const _ALERT_TITLE_VALIDATION_ERROR = "VALIDATION ERROR";
+const _ALERT_MSG_VALIDATION = "Please make sure all fields are valid.";
+const _ALERT_TITLE_ERROR = "ERROR";
+const _ALERT_MSG_ERROR_DEFAULT = "Error on system. Please contact Administrator!";
+const _ALERT_TITLE_SUCCESS = "SUCCESS";
+
+const _ALERT_TITLE_SUCCESS_LOGOUT = "LOGOUT SUCCESS";
+const _ALERT_MSG_SUCCESS_LOGOUT = "You have successfully logout";
+const _ALERT_MSG_ERROR_LOGOUT = "An error has occurred. Please login again.";
+const _ALERT_TITLE_ERROR_TIMEOUT = "TIMEOUT ERROR";
+const _ALERT_MSG_ERROR_TIMEOUT = "Your session is expired. Please login again.";
+
+const _ALERT_TITLE_ERROR_LOGIN = "LOGIN ERROR";
+const _ALERT_TITLE_ERROR_REGISTER = "REGISTRATION ERROR";
+const _ALERT_TITLE_SUCCESS_REGISTER = "REGISTRATION SUCCESS";
+const _ALERT_MSG_SUCCESS_REGISTER = "You have successfully registered. Please activate via link sent to your email.";
+const _ALERT_TITLE_ERROR_ACTIVATE = "ACTIVATION ERROR";
+const _ALERT_TITLE_SUCCESS_ACTIVATE = "ACTIVATION SUCCESS";
+const _ALERT_MSG_SUCCESS_ACTIVATE = "Your account has successfully activated. Please login with email as user ID and your registered password.";
 
 function ShowLoader () {
     let overlay = jQuery('<div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.6); z-index: 10000;"><div style="text-align: center; width: 100%; position: absolute; top: 40%; margin-top: -50px;"> <div class="preloader-wrapper big active"> <div class="spinner-layer spinner-blue"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> <div class="spinner-layer spinner-red"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> <div class="spinner-layer spinner-yellow"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> <div class="spinner-layer spinner-green"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> </div> </div> </div>');
@@ -33,6 +43,7 @@ function mzValidate (name) {
     let obj = {};
     obj.form_id = name;
     obj.fields = [];
+    
     const checkField = function (field_id, type, val) {
         const fieldVal = $('#'+field_id).val();
         switch (type) {
@@ -67,6 +78,7 @@ function mzValidate (name) {
         }
         return true;
     };
+    
     const validateFields = function (field_id, validator, name) {
         let msg = '';
         $('#'+field_id).removeClass('invalid');
@@ -105,6 +117,7 @@ function mzValidate (name) {
         }
         return true;
     };
+    
     const validateFieldsNoError = function (field_id, validator) {
         let noError = true;
         $.each(validator, function (n2, u2) {
@@ -115,6 +128,7 @@ function mzValidate (name) {
         });
         return noError;
     };
+    
     this.registerFields = function (data) {
         this.fields = data;
         $.each(this.fields, function (n, u) {
@@ -123,6 +137,7 @@ function mzValidate (name) {
             });
         });
     };
+    
     this.validateForm = function () {
         let result = true;
         $.each(this.fields, function (n, u) {
@@ -136,14 +151,12 @@ function mzValidate (name) {
 function mzAjaxRequest(url, type, data, async) {
     let returnVal = '';
     if (typeof url === 'undefined' || typeof type === 'undefined' || url === '' || type === '') {
-        toastr['error'](_ALERT_ERROR_MSG_DEFAULT, _ALERT_ERROR);
-        throw new Error('error');
+        throw new Error(_ALERT_MSG_ERROR_DEFAULT);
     }
     if (type !== 'GET' && type !== 'POST' && type !== 'PUT' && type !== 'DELETE') {
-        toastr['error'](_ALERT_ERROR_MSG_DEFAULT, _ALERT_ERROR);
-        throw new Error('error');
+        throw new Error(_ALERT_MSG_ERROR_DEFAULT);
     }
-    data = typeof data === 'undefined' ? '' : JSON.stringify(data);
+    data = typeof data === 'undefined' ? '' : data; // JSON.stringify(data)
     async = typeof async === 'undefined' ? false : async;
 
     let header = {};
@@ -159,7 +172,7 @@ function mzAjaxRequest(url, type, data, async) {
     $.ajax({
         url: '../../api/' + url,
         type: type,
-        contentType: 'application/json',
+        //contentType: 'application/json',
         headers: header,
         data : data,
         dataType : 'json',
@@ -168,18 +181,17 @@ function mzAjaxRequest(url, type, data, async) {
             if (resp.success) {
                 returnVal = resp.result;
             } else {
-                errMsg = 'error';
-                toastr['error'](resp.errmsg !== '' ? resp.errmsg : _ALERT_ERROR_MSG_DEFAULT, _ALERT_ERROR);
+                errMsg = resp.errmsg !== '' ? resp.errmsg : _ALERT_MSG_ERROR_DEFAULT;
             }
         },
         error: function() {
-            errMsg = 'error';
-            toastr['error'](_ALERT_ERROR_MSG_DEFAULT, _ALERT_ERROR);
+            errMsg = _ALERT_MSG_ERROR_DEFAULT;
         }
     });
 
-    if (errMsg !== '')
+    if (errMsg !== '') {
         throw new Error(errMsg);
+    }
     return returnVal;
 }
 

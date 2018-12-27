@@ -93,14 +93,22 @@ document.addEventListener("DOMContentLoaded", function() {
         setTimeout(function (){
             try {
                 if (formRegRegisterValidate.validateForm()) {
-                    let data = {};
-                    //const respRegister = mzAjaxRequest("", "POST", data);
+                    let data = {
+                        action : 'register', 
+                        userFirstName : $('#txtRegFirstName').val(), 
+                        userLastName : $('#txtRegLastName').val(), 
+                        userEmail : $('#txtRegEmail').val(), 
+                        userMykadNo : $('#txtRegMyKad').val(), 
+                        userProfileContactNo : $('#txtRegPhone').val(), 
+                        userPassword : $('#txtRegPasswordConfirm').val()
+                    };
+                    mzAjaxRequest("register.php", "POST", data);
                     window.location.href = 'login.html?f=3';
                 } else {
-                    toastr["error"](_VALIDATION_MSG, _VALIDATION_ERROR)
+                    toastr["error"](_ALERT_MSG_VALIDATION, _ALERT_TITLE_VALIDATION_ERROR)
                 }
             } catch (e) {
-                if (e.message !== "error")   toastr["error"](e.message, _ALERT_ERROR);
+                toastr["error"](e.message, _ALERT_TITLE_ERROR_REGISTER);
             }
             HideLoader();
         }, 300);
