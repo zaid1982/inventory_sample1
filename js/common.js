@@ -17,6 +17,9 @@ const _ALERT_MSG_SUCCESS_REGISTER = "You have successfully registered. Please ac
 const _ALERT_TITLE_ERROR_ACTIVATE = "ACTIVATION ERROR";
 const _ALERT_TITLE_SUCCESS_ACTIVATE = "ACTIVATION SUCCESS";
 const _ALERT_MSG_SUCCESS_ACTIVATE = "Your account has successfully activated. Please login with email as user ID and your registered password.";
+const _ALERT_TITLE_ERROR_FORGOT_PASSWORD = "FORGOT PASSWORD ERROR";
+const _ALERT_TITLE_SUCCESS_FORGOT_PASSWORD = "FORGOT PASSWORD SUCCESS";
+const _ALERT_MSG_SUCCESS_FORGOT_PASSWORD = "Your password successfully reset. Please login with temporary password sent to your email.";
 
 function ShowLoader () {
     let overlay = jQuery('<div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.6); z-index: 10000;"><div style="text-align: center; width: 100%; position: absolute; top: 40%; margin-top: -50px;"> <div class="preloader-wrapper big active"> <div class="spinner-layer spinner-blue"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> <div class="spinner-layer spinner-red"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> <div class="spinner-layer spinner-yellow"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> <div class="spinner-layer spinner-green"> <div class="circle-clipper left"> <div class="circle"></div> </div><div class="gap-patch"> <div class="circle"></div> </div><div class="circle-clipper right"> <div class="circle"></div> </div> </div> </div> </div> </div>');
@@ -146,6 +149,13 @@ function mzValidate (name) {
         });
         return result;
     };
+    
+    this.clearValidation = function () {
+        $.each(this.fields, function (n, u) {
+            $('#'+u.field_id).removeClass('invalid');
+            $('#'+u.field_id+'Err').html('');
+        });
+    };
 }
 
 function mzAjaxRequest(url, type, data, async) {
@@ -170,7 +180,7 @@ function mzAjaxRequest(url, type, data, async) {
 
     let errMsg = '';
     $.ajax({
-        url: '../../api/' + url,
+        url: '../api/' + url,
         type: type,
         //contentType: 'application/json',
         headers: header,

@@ -92,6 +92,34 @@ try {
             Class_db::getInstance()->db_commit();        
             Class_db::getInstance()->db_close();
         }
+        else if ($action == 'forgot_password') {
+            $username = filter_input(INPUT_POST, 'username');
+            
+            if (is_null($username) || $username === '') { 
+                throw new Exception('(ErrCode:2110) [' . __LINE__ . '] - Field User ID empty', 31);         
+            } 
+            
+            Class_db::getInstance()->db_connect();
+            Class_db::getInstance()->db_beginTransaction();
+            $is_transaction = true;
+                        
+            $sys_user = Class_db::getInstance()->db_select_single('sys_user', array('user_email'=>$username));
+            if (empty($sys_user)) {
+                throw new Exception('(ErrCode:2111) [' . __LINE__ . '] - User ID not exist', 31);
+            }
+            
+            $userId = $sys_user['user_id'];
+            $temporaryPassword = $fn_general->generateRandomString(15);
+            Class_db::getInstance()->db_update('sys_user', array('user_password'=>md5($temporaryPassword)), array('user_id'=>$userId));
+            
+            $emailParam = array('fullname'=>$sys_user['user_first_name'].' '.$sys_user['user_last_name'], 'username'=>$username, 'temporary_password'=>$temporaryPassword); 
+            $fn_email->setup_email($userId, 2, $emailParam);
+
+            $fn_general->save_audit('4', $userId);
+
+            Class_db::getInstance()->db_commit();        
+            Class_db::getInstance()->db_close();
+        }
         else {
             throw new Exception('(ErrCode:2102) [' . __LINE__ . '] - Parameter action invalid ('.$action.')');        
         }
