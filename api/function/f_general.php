@@ -86,7 +86,7 @@ class Class_general {
     public function save_audit ($audit_action_id='', $user_id='', $remark='') {
         try {
             $this->log_debug(__FUNCTION__, __LINE__, 'Entering save_audit()');
-            if ($audit_action_id == '') {
+            if ($audit_action_id === '') {
                 throw new Exception('(ErrCode:0052) [' . __LINE__ . '] - Parameter audit_action_id empty');   
             }
             

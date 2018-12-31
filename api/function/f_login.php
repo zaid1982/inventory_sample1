@@ -126,11 +126,11 @@ class Class_login {
             foreach ($menu_list as $menu) {                
                 //$this->fn_general->log_debug(__FUNCTION__, __LINE__, '$nav_page = '.$menu['nav_page']);
                 //$this->fn_general->log_debug(__FUNCTION__, __LINE__, '$nav_index = '.$nav_index);
-                if (!is_null($menu['nav_page'])) {
-                    array_push($menu_return, array('navId'=>$menu['nav_id'], 'navDesc'=>$menu['nav_desc'], 'navIcon'=>$menu['nav_icon'], 'navPage'=>$menu['nav_page'], 'navSecond'=>array()));
+                if (is_null($menu['nav_second_id'])) {
+                    array_push($menu_return, array('navId'=>$menu['nav_id'], 'navDesc'=>$menu['nav_desc'], 'navIcon'=>$menu['nav_icon'], 'navPage'=> $this->fn_general->clear_null($menu['nav_page']), 'navSecond'=>array()));
                     $nav_index++;
                 } 
-                else if (!is_null($menu['nav_second_id'])) {
+                else {
                     array_push($menu_return[$nav_index-1]['navSecond'], array('navSecondId'=>$menu['nav_second_id'], 'navSecondDesc'=>$menu['nav_second_desc'], 'navSecondPage'=>$menu['nav_second_page']));
                 }
             }

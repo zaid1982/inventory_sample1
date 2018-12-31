@@ -166,7 +166,7 @@
                 }, 200);
 
                 // display notification
-                const getVar = getUrlVars()['f'];
+                const getVar = mzGetUrlVars()['f'];
                 if (typeof getVar !== 'undefined') {
                     switch (getVar) {
                         case '0':
@@ -185,8 +185,9 @@
                 }
 
                 // activate account
-                const getVarKey = getUrlVars()['key'];
+                const getVarKey = mzGetUrlVars()['key'];
                 if (typeof getVarKey !== 'undefined') {
+                    ShowLoader();
                     setTimeout(function () {
                         try {
                             let data = {
@@ -240,11 +241,17 @@
                                 let data = {
                                     username: $('#txtLgnUsername').val(),
                                     password: $('#txtLgnPassword').val()
-                                };
-                                const aa = _ALERT_MSG_VALIDATION;
-                                const respLogin = mzAjaxRequest('login.php', 'POST', data);
+                                };                                
+                                const respLogin = mzAjaxRequest('login.php', 'POST', data);                                
                                 sessionStorage.setItem('token', respLogin.token);
-                                localStorage.setItem('userInfo', JSON.stringify(respLogin));
+                                
+                                let userInfo = {};
+                                $.each(respLogin, function (n, u) {
+                                    if (n !== 'token') {
+                                        userInfo[n] = u;
+                                    }
+                                });
+                                sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
                                 window.location.href = 'home.html';
                             } else {
                                 toastr['error'](_ALERT_MSG_VALIDATION, _ALERT_TITLE_VALIDATION_ERROR);

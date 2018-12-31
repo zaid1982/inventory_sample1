@@ -205,7 +205,7 @@ function mzAjaxRequest(url, type, data, async) {
     return returnVal;
 }
 
-function getUrlVars() {
+function mzGetUrlVars() {
     let vars = {};
     const parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
         function(m,key,value) {
@@ -213,4 +213,84 @@ function getUrlVars() {
         }
     );
     return vars;
-  }
+}
+
+function mzSleep(delay) {
+    let start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+}
+
+function initiatePages() {
+
+    $(".button-collapse").sideNav();
+
+    let container = document.querySelector('.custom-scrollbar');
+    Ps.initialize(container, {
+        wheelSpeed: 2,
+        wheelPropagation: true,
+        minScrollbarLength: 20
+    });
+    
+    const token = sessionStorage.getItem('token');
+    let userInfo = sessionStorage.getItem('userInfo');
+    if (token === null || userInfo === null) {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userInfo');
+        window.location.href = 'login.html?f=2';
+    }
+    userInfo = JSON.parse(userInfo);
+        
+    let menuHtml = '<li>\
+      <a class="collapsible-header waves-effect arrow-r">\
+        <i class="fa fa-tachometer"></i> Dashboards\
+        <i class="fa fa-angle-down rotate-icon"></i>\
+      </a>\
+      <div class="collapsible-body">\
+        <ul>\
+          <li>\
+            <a href="../dashboards/v-1.html" class="waves-effect">Version 1</a>\
+          </li>\
+          <li>\
+            <a href="../dashboards/v-2.html" class="waves-effect">Version 2</a>\
+          </li>\
+          <li>\
+            <a href="../dashboards/v-3.html" class="waves-effect">Version 3</a>\
+          </li>\
+          <li>\
+            <a href="../dashboards/v-4.html" class="waves-effect">Version 4</a>\
+          </li>\
+          <li>\
+            <a href="../dashboards/v-5.html" class="waves-effect">Version 5</a>\
+          </li>\
+          <li>\
+            <a href="../dashboards/v-6.html" class="waves-effect">Version 6</a>\
+          </li>\
+        </ul>\
+      </div>\
+    </li>\
+    <li>\
+      <a class="collapsible-header waves-effect arrow-r">\
+        <i class="fa fa-photo"></i> Pages\
+        <i class="fa fa-angle-down rotate-icon"></i>\
+      </a>\
+      <div class="collapsible-body">\
+        <ul>\
+          <li>\
+            <a href="../pages/login.html" class="waves-effect">Login</a>\
+          </li>\
+          <li>\
+            <a href="../pages/register.html" class="waves-effect">Register</a>\
+          </li>\
+          <li>\
+            <a href="../pages/pricing.html" class="waves-effect">Pricing</a>\
+          </li>\
+          <li>\
+            <a href="../pages/about.html" class="waves-effect">About us</a>\
+          </li>\
+        </ul>\
+      </div>\
+    </li>';
+    $('#ulNavLeft').append(menuHtml);
+
+    $('.collapsible').collapsible();
+}

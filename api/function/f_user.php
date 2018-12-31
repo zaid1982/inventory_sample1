@@ -110,7 +110,7 @@ class Class_user {
                 foreach ($arr_checkpoint as $checkpoint) {
                     $checkpointId = $checkpoint['checkpoint_id'];
                     $groupId = $checkpoint['group_id'];
-                    if ($groupId == '2' || is_null($groupId)) {
+                    if ($groupId === '2' || is_null($groupId)) {
                         Class_db::getInstance()->db_insert('wfl_checkpoint_user', array('user_id'=>$userId, 'checkpoint_id'=>$checkpointId));
                     }
                 }
@@ -138,10 +138,10 @@ class Class_user {
             
             $userId = substr($activationInput, 20);
             
-            if (Class_db::getInstance()->db_count('sys_user', array('user_id'=>$userId, 'user_activation_key'=>$activationInput)) == 0) {
+            if (Class_db::getInstance()->db_count('sys_user', array('user_id'=>$userId, 'user_activation_key'=>$activationInput)) === 0) {
                 throw new Exception('(ErrCode:0213) [' . __LINE__ . '] - Wrong activation key. Please click the activation link given from your email.', 31);                     
             }
-            if (Class_db::getInstance()->db_count('sys_user', array('user_id'=>$userId, 'user_activation_key'=>$activationInput, 'user_status'=>'1')) == 1) {
+            if (Class_db::getInstance()->db_count('sys_user', array('user_id'=>$userId, 'user_activation_key'=>$activationInput, 'user_status'=>'1')) === 1) {
                 throw new Exception('(ErrCode:0213) [' . __LINE__ . '] - Your account already activated. Please login with email as user ID and your registered password.', 31);                     
             }
                         

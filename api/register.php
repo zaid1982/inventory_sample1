@@ -23,7 +23,7 @@ try {
         } 
         $result = '';
         
-        if ($action == 'register') {
+        if ($action === 'register') {
             $userFirstName = filter_input(INPUT_POST, 'userFirstName');
             $userLastName = filter_input(INPUT_POST, 'userLastName');
             $userEmail = filter_input(INPUT_POST, 'userEmail');
@@ -74,7 +74,7 @@ try {
             Class_db::getInstance()->db_commit();        
             Class_db::getInstance()->db_close();
         }
-        else if ($action == 'activate') {
+        else if ($action === 'activate') {
             $activationInput = filter_input(INPUT_POST, 'activationInput');
              
             if (is_null($activationInput) || $activationInput === '') { 
@@ -92,7 +92,7 @@ try {
             Class_db::getInstance()->db_commit();        
             Class_db::getInstance()->db_close();
         }
-        else if ($action == 'forgot_password') {
+        else if ($action === 'forgot_password') {
             $username = filter_input(INPUT_POST, 'username');
             
             if (is_null($username) || $username === '') { 
@@ -137,7 +137,7 @@ try {
     }
     Class_db::getInstance()->db_close();
     $form_data['error'] = substr($ex->getMessage(), strpos($ex->getMessage(), '] - ') + 4);
-    if ($ex->getCode() == 31) {
+    if ($ex->getCode() === 31) {
         $form_data['errmsg'] = substr($ex->getMessage(), strpos($ex->getMessage(), '] - ') + 4);
     } 
     else {
