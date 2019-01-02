@@ -180,7 +180,7 @@ function mzAjaxRequest(url, type, data, async) {
 
     let errMsg = '';
     $.ajax({
-        url: '../api/' + url,
+        url: 'api/' + url,
         type: type,
         //contentType: 'application/json',
         headers: header,
@@ -220,6 +220,17 @@ function mzSleep(delay) {
     while (new Date().getTime() < start + delay);
 }
 
+function mzLogout() {
+    sessionStorage.clear();
+    window.location.href = 'login.php?f=0';
+}
+
+function mzGoToMenu(url, navId, navSecondId) {
+    sessionStorage.setItem('navId', navId);                                
+    sessionStorage.setItem('navSecondId', navSecondId);
+    window.location.href = url;
+}
+
 function initiatePages() {
 
     $(".button-collapse").sideNav();
@@ -232,65 +243,56 @@ function initiatePages() {
     });
     
     const token = sessionStorage.getItem('token');
+    const navId = sessionStorage.getItem('navId');
+    const navSecondId = sessionStorage.getItem('navSecondId');
     let userInfo = sessionStorage.getItem('userInfo');
-    if (token === null || userInfo === null) {
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('userInfo');
-        window.location.href = 'login.html?f=2';
+    if (token === null) {
+        window.location.href = 'login.php?f=2';
     }
-    userInfo = JSON.parse(userInfo);
-        
-    let menuHtml = '<li>\
-      <a class="collapsible-header waves-effect arrow-r">\
-        <i class="fa fa-tachometer"></i> Dashboards\
-        <i class="fa fa-angle-down rotate-icon"></i>\
-      </a>\
-      <div class="collapsible-body">\
-        <ul>\
-          <li>\
-            <a href="../dashboards/v-1.html" class="waves-effect">Version 1</a>\
-          </li>\
-          <li>\
-            <a href="../dashboards/v-2.html" class="waves-effect">Version 2</a>\
-          </li>\
-          <li>\
-            <a href="../dashboards/v-3.html" class="waves-effect">Version 3</a>\
-          </li>\
-          <li>\
-            <a href="../dashboards/v-4.html" class="waves-effect">Version 4</a>\
-          </li>\
-          <li>\
-            <a href="../dashboards/v-5.html" class="waves-effect">Version 5</a>\
-          </li>\
-          <li>\
-            <a href="../dashboards/v-6.html" class="waves-effect">Version 6</a>\
-          </li>\
-        </ul>\
-      </div>\
-    </li>\
-    <li>\
-      <a class="collapsible-header waves-effect arrow-r">\
-        <i class="fa fa-photo"></i> Pages\
-        <i class="fa fa-angle-down rotate-icon"></i>\
-      </a>\
-      <div class="collapsible-body">\
-        <ul>\
-          <li>\
-            <a href="../pages/login.html" class="waves-effect">Login</a>\
-          </li>\
-          <li>\
-            <a href="../pages/register.html" class="waves-effect">Register</a>\
-          </li>\
-          <li>\
-            <a href="../pages/pricing.html" class="waves-effect">Pricing</a>\
-          </li>\
-          <li>\
-            <a href="../pages/about.html" class="waves-effect">About us</a>\
-          </li>\
-        </ul>\
-      </div>\
-    </li>';
-    $('#ulNavLeft').append(menuHtml);
-
+    else if (userInfo === null || navId === null || navSecondId === null) {   
+        sessionStorage.removeItem('token');
+        window.location.href = 'login.php?f=1';
+    }    
+    userInfo = JSON.parse(userInfo);    
+    if (typeof userInfo.menu === 'undefined') {
+        sessionStorage.removeItem('token');
+        window.location.href = 'login.php?f=1';
+    }
+    
+    const menuSet = userInfo.menu;    
+    let titleHtml = '';
+    $.each(menuSet, function (n, nav) {
+        let menuHtml = '<li>';
+        const strActive = navId === nav.navId ? 'active' : '';
+        const strBold = navId === nav.navId ? 'font-weight-bold' : '';  
+        const navSeconds = nav.navSecond;
+        if (navSeconds.length > 0) {
+            menuHtml += '<a class="collapsible-header waves-effect arrow-r '+strActive+'"><i class="fa fa-'+nav.navIcon+'"></i> '+nav.navDesc+'<i class="fa fa-angle-down rotate-icon"></i></a>';
+            menuHtml += '<div class="collapsible-body">';
+            menuHtml += '<ul>';
+            if (navId === nav.navId) {
+                titleHtml += '<span class="text-primary">'+nav.navDesc+'</span>';
+            }
+            $.each(navSeconds, function (n2, nav2nd) {
+                const strHighlight = navSecondId === nav2nd.navSecondId ? 'font-weight-bold' : '';
+                menuHtml += '<li><a href="'+nav2nd.navSecondPage+'" class="waves-effect '+strHighlight+'">'+nav2nd.navSecondDesc+'</a></li>';
+                if (navSecondId === nav2nd.navSecondId) {
+                    titleHtml += '<span class="font-small"> / '+nav2nd.navSecondDesc+'</span>';
+                }
+            });
+            menuHtml += '</ul>';
+            menuHtml += '</div>';
+        } 
+        else {
+            menuHtml += '<a class="collapsible-header waves-effect '+strBold+'" href="#" onclick="mzGoToMenu(\''+nav.navPage+'\', \''+nav.navId+'\', \'0\');"><i class="fa fa-'+nav.navIcon+'"></i> '+nav.navDesc+'</a>';
+            if (navId === nav.navId) {
+                titleHtml += nav.navDesc;
+            }
+        }
+        menuHtml += '</li>';
+        $('#ulNavLeft').append(menuHtml);    
+    });
+    //alert(titleHtml);
+    $('#pBasePageTitle').append(titleHtml); 
     $('.collapsible').collapsible();
 }

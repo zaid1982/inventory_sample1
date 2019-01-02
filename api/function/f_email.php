@@ -18,8 +18,7 @@ class Class_email {
                 $msg = substr($msg, $pos+2); 
             }
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."] - ".$msg;
-        } 
-        else {
+        } else {
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."]";
         }
     }
@@ -27,8 +26,7 @@ class Class_email {
     public function __get($property) {
         if (property_exists($this, $property)) {
             return $this->$property;
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0001', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -36,8 +34,7 @@ class Class_email {
     public function __set( $property, $value ) {
         if (property_exists($this, $property)) {
             $this->$property = $value;        
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0002', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -45,8 +42,7 @@ class Class_email {
     public function __isset( $property ) {
         if (property_exists($this, $property)) {
             return isset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0003', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -54,8 +50,7 @@ class Class_email {
     public function __unset( $property ) {
         if (property_exists($this, $property)) {
             unset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0004', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         } 
     }
@@ -95,8 +90,7 @@ class Class_email {
             Class_db::getInstance()->db_insert('email_send', array('email_template_id'=>$emailTemplateId, 'email_address'=>$sys_user['user_email'], 'email_title'=>$emailTitle,
                 'email_html'=>$emailHtml, 'user_id'=>$userId));
             return true;
-        }
-        catch(Exception $ex) {  
+        } catch(Exception $ex) {  
             $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage()); 
             throw new Exception($this->get_exception('0301', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }

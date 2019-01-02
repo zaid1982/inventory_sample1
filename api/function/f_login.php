@@ -24,8 +24,7 @@ class Class_login {
                 $msg = substr($msg, $pos+2); 
             }
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."] - ".$msg;
-        } 
-        else {
+        } else {
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."]";
         }
     }
@@ -33,8 +32,7 @@ class Class_login {
     public function __get($property) {
         if (property_exists($this, $property)) {
             return $this->$property;
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0001', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -42,8 +40,7 @@ class Class_login {
     public function __set( $property, $value ) {
         if (property_exists($this, $property)) {
             $this->$property = $value;        
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0002', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -51,8 +48,7 @@ class Class_login {
     public function __isset( $property ) {
         if (property_exists($this, $property)) {
             return isset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0003', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -60,8 +56,7 @@ class Class_login {
     public function __unset( $property ) {
         if (property_exists($this, $property)) {
             unset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0004', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -77,8 +72,7 @@ class Class_login {
             $token = array('iss'=>'inventory_sample1/jwt', 'username'=>$username, 'iat'=>time(), 'exp'=>time()+10);
             $jwt = JWT::encode($token, $key);              
             return $jwt;
-        }
-        catch(Exception $ex) {  
+        } catch(Exception $ex) {  
             $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage()); 
             throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
@@ -95,8 +89,7 @@ class Class_login {
             JWT::$leeway = 60; // $leeway in seconds
             $data = JWT::decode($jwt, $key, array('HS256'));
             return $data;
-        }
-        catch(Exception $ex) {   
+        } catch(Exception $ex) {   
             $this->fn_general->log_error(__FUNCTION__, __LINE__, $ex->getMessage());
             throw new Exception($this->get_exception('0101', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
@@ -129,8 +122,7 @@ class Class_login {
                 if (is_null($menu['nav_second_id'])) {
                     array_push($menu_return, array('navId'=>$menu['nav_id'], 'navDesc'=>$menu['nav_desc'], 'navIcon'=>$menu['nav_icon'], 'navPage'=> $this->fn_general->clear_null($menu['nav_page']), 'navSecond'=>array()));
                     $nav_index++;
-                } 
-                else {
+                } else {
                     array_push($menu_return[$nav_index-1]['navSecond'], array('navSecondId'=>$menu['nav_second_id'], 'navSecondDesc'=>$menu['nav_second_desc'], 'navSecondPage'=>$menu['nav_second_page']));
                 }
             }

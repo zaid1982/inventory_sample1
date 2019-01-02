@@ -18,8 +18,7 @@ class Class_user {
                 $msg = substr($msg, $pos+2); 
             }
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."] - ".$msg;
-        } 
-        else {
+        } else {
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."]";
         }
     }
@@ -27,8 +26,7 @@ class Class_user {
     public function __get($property) {
         if (property_exists($this, $property)) {
             return $this->$property;
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0001', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -36,8 +34,7 @@ class Class_user {
     public function __set( $property, $value ) {
         if (property_exists($this, $property)) {
             $this->$property = $value;        
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0002', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -45,8 +42,7 @@ class Class_user {
     public function __isset( $property ) {
         if (property_exists($this, $property)) {
             return isset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0003', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -54,8 +50,7 @@ class Class_user {
     public function __unset( $property ) {
         if (property_exists($this, $property)) {
             unset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0004', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         } 
     }

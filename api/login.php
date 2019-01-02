@@ -73,8 +73,7 @@ try {
         $form_data['result'] = $result;
         $form_data['success'] = true;
         $fn_general->log_debug($api_name, __LINE__, 'Result = '.print_r($result, true));
-    } 
-    else {
+    } else {
         throw new Exception('(ErrCode:2000) [' . __LINE__ . '] - Wrong Request Method');   
     }
 } catch (Exception $ex) {
@@ -85,8 +84,7 @@ try {
     $form_data['error'] = substr($ex->getMessage(), strpos($ex->getMessage(), '] - ') + 4);
     if ($ex->getCode() === 31) {
         $form_data['errmsg'] = substr($ex->getMessage(), strpos($ex->getMessage(), '] - ') + 4);
-    } 
-    else {
+    } else {
         $form_data['errmsg'] = 'Processing error. Please contact Administrator!';
     }
     $fn_general->log_error($api_name, __LINE__, $ex->getMessage());

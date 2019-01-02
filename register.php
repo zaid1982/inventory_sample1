@@ -9,11 +9,11 @@
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Bootstrap core CSS -->
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
         <!-- Material Design Bootstrap -->
-        <link href="../css/mdb.min.css" rel="stylesheet">
+        <link href="css/mdb.min.css" rel="stylesheet">
         <!-- Your custom styles (optional) -->
-        <link href="../css/style.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
 
         <style>            
             .form-elegant .font-small {
@@ -34,7 +34,7 @@
         </style>
 
         <!-- JQuery -->
-        <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     </head>
 
     <body class="intro-2">
@@ -154,7 +154,7 @@
                         <!--Footer-->
                         <div class="modal-footer mx-5 pt-3 mb-1">
                             <p class="font-small grey-text d-flex justify-content-end">
-                                Back to <a href="login.html" class="blue-text ml-1">Sign in</a>
+                                Back to <a href="login.php" class="blue-text ml-1">Sign in</a>
                             </p>
                         </div>
 
@@ -169,16 +169,16 @@
 
         <!-- SCRIPTS -->
         <!-- Bootstrap tooltips -->
-        <script type="text/javascript" src="../js/popper.min.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
         <!-- Bootstrap core JavaScript -->
-        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <!-- MDB core JavaScript -->
-        <script type="text/javascript" src="../js/mdb.min.js"></script>
+        <script type="text/javascript" src="js/mdb.min.js"></script>
 
         <script type="text/javascript">
             new WOW().init();
 
-            document.write('<scr' + 'ipt src="../js/common.js?' + new Date().valueOf() + '" type="text/javascript"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt src="js/common.js?' + new Date().valueOf() + '" type="text/javascript"></scr' + 'ipt>');
 
             document.addEventListener("DOMContentLoaded", function () {
 
@@ -274,21 +274,20 @@
                     ShowLoader();
                     setTimeout(function () {
                         try {
-                            if (formRegRegisterValidate.validateForm()) {
-                                let data = {
-                                    action: 'register',
-                                    userFirstName: $('#txtRegFirstName').val(),
-                                    userLastName: $('#txtRegLastName').val(),
-                                    userEmail: $('#txtRegEmail').val(),
-                                    userMykadNo: $('#txtRegMyKad').val(),
-                                    userProfileContactNo: $('#txtRegPhone').val(),
-                                    userPassword: $('#txtRegPasswordConfirm').val()
-                                };
-                                mzAjaxRequest('register.php', 'POST', data);
-                                window.location.href = 'login.html?f=3';
-                            } else {
-                                toastr["error"](_ALERT_MSG_VALIDATION, _ALERT_TITLE_VALIDATION_ERROR);
-                            }
+                            if (!formRegRegisterValidate.validateForm()) {
+                                throw new Error(_ALERT_MSG_VALIDATION);
+                            }   
+                            let data = {
+                                action: 'register',
+                                userFirstName: $('#txtRegFirstName').val(),
+                                userLastName: $('#txtRegLastName').val(),
+                                userEmail: $('#txtRegEmail').val(),
+                                userMykadNo: $('#txtRegMyKad').val(),
+                                userProfileContactNo: $('#txtRegPhone').val(),
+                                userPassword: $('#txtRegPasswordConfirm').val()
+                            };
+                            mzAjaxRequest('register.php', 'POST', data);
+                            window.location.href = 'login.php?f=3';
                         } catch (e) {
                             toastr["error"](e.message, _ALERT_TITLE_ERROR_REGISTER);
                         }

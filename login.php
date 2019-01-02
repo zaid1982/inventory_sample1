@@ -9,11 +9,11 @@
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Bootstrap core CSS -->
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
         <!-- Material Design Bootstrap -->
-        <link href="../css/mdb.min.css" rel="stylesheet">
+        <link href="css/mdb.min.css" rel="stylesheet">
         <!-- Your custom styles (optional) -->
-        <link href="../css/style.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
 
         <style>            
             .form-elegant .font-small {
@@ -34,7 +34,7 @@
         </style>
 
         <!-- JQuery -->
-        <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     </head>
 
     <body class="intro-2">
@@ -92,7 +92,7 @@
                         <!--Footer-->
                         <div class="modal-footer mx-5 pt-3 mb-1">
                             <p class="font-small grey-text d-flex justify-content-end">
-                                Not a member? <a href="register.html" class="blue-text ml-1">Sign Up</a>
+                                Not a member? <a href="register.php" class="blue-text ml-1">Sign Up</a>
                             </p>
                         </div>
 
@@ -147,16 +147,16 @@
 
         <!--  SCRIPTS  -->
         <!-- Bootstrap tooltips -->
-        <script type="text/javascript" src="../js/popper.min.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
         <!-- Bootstrap core JavaScript -->
-        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <!-- MDB core JavaScript -->
-        <script type="text/javascript" src="../js/mdb.js"></script>
+        <script type="text/javascript" src="js/mdb.js"></script>
 
         <script type="text/javascript">
             new WOW().init();
 
-            document.write('<scr' + 'ipt src="../js/common.js?' + new Date().valueOf() + '" type="text/javascript"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt src="js/common.js?' + new Date().valueOf() + '" type="text/javascript"></scr' + 'ipt>');
 
             document.addEventListener('DOMContentLoaded', function () {
 
@@ -182,7 +182,7 @@
                             toastr['success'](_ALERT_MSG_SUCCESS_REGISTER, _ALERT_TITLE_SUCCESS_REGISTER);
                             break;
                     }
-                }
+                } 
 
                 // activate account
                 const getVarKey = mzGetUrlVars()['key'];
@@ -237,25 +237,26 @@
                     ShowLoader();
                     setTimeout(function () {
                         try {
-                            if (formLgnLoginValidate.validateForm()) {
-                                let data = {
-                                    username: $('#txtLgnUsername').val(),
-                                    password: $('#txtLgnPassword').val()
-                                };                                
-                                const respLogin = mzAjaxRequest('login.php', 'POST', data);                                
-                                sessionStorage.setItem('token', respLogin.token);
-                                
-                                let userInfo = {};
-                                $.each(respLogin, function (n, u) {
-                                    if (n !== 'token') {
-                                        userInfo[n] = u;
-                                    }
-                                });
-                                sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
-                                window.location.href = 'home.html';
-                            } else {
-                                toastr['error'](_ALERT_MSG_VALIDATION, _ALERT_TITLE_VALIDATION_ERROR);
-                            }
+                            if (!formLgnLoginValidate.validateForm()) {
+                                throw new Error(_ALERT_MSG_VALIDATION);
+                            }                            
+                            let data = {
+                                username: $('#txtLgnUsername').val(),
+                                password: $('#txtLgnPassword').val()
+                            };                                
+                            const respLogin = mzAjaxRequest('login.php', 'POST', data);                                
+                            sessionStorage.setItem('token', respLogin.token);       
+
+                            let userInfo = {};
+                            $.each(respLogin, function (n, u) {
+                                if (n !== 'token') {
+                                    userInfo[n] = u;
+                                }
+                            });
+                            sessionStorage.setItem('userInfo', JSON.stringify(userInfo));                         
+                            sessionStorage.setItem('navId', 1);                                
+                            sessionStorage.setItem('navSecondId', 0);
+                            window.location.href = 'home.php';
                         } catch (e) {
                             toastr['error'](e.message, _ALERT_TITLE_ERROR_LOGIN);
                         }
@@ -291,17 +292,16 @@
                     ShowLoader();
                     setTimeout(function () {
                         try {
-                            if (formMfpValidate.validateForm()) {
-                                let data = {
-                                    action: 'forgot_password',
-                                    username: $('#txtMfpUserId').val()
-                                };
-                                mzAjaxRequest('register.php', 'POST', data);
-                                $('#modalForgotPassword').modal('hide');
-                                toastr['success'](_ALERT_MSG_SUCCESS_FORGOT_PASSWORD, _ALERT_TITLE_SUCCESS_FORGOT_PASSWORD);
-                            } else {
-                                toastr['error'](_ALERT_MSG_VALIDATION, _ALERT_TITLE_VALIDATION_ERROR);
+                            if (!formMfpValidate.validateForm()) {
+                                throw new Error(_ALERT_MSG_VALIDATION);
                             }
+                            let data = {
+                                action: 'forgot_password',
+                                username: $('#txtMfpUserId').val()
+                            };
+                            mzAjaxRequest('register.php', 'POST', data);
+                            $('#modalForgotPassword').modal('hide');
+                            toastr['success'](_ALERT_MSG_SUCCESS_FORGOT_PASSWORD, _ALERT_TITLE_SUCCESS_FORGOT_PASSWORD);
                         } catch (e) {
                             toastr['error'](e.message, _ALERT_TITLE_ERROR_FORGOT_PASSWORD);
                         }

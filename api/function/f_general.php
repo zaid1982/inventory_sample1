@@ -17,8 +17,7 @@ class Class_general {
                 $msg = substr($msg, $pos+2); 
             }
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."] - ".$msg;
-        } 
-        else {
+        } else {
             return "(ErrCode:".$codes.") [".__CLASS__.":".$function.":".$line."]";
         }
     }
@@ -26,8 +25,7 @@ class Class_general {
     public function __get($property) {
         if (property_exists($this, $property)) {
             return $this->$property;
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0001', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -35,8 +33,7 @@ class Class_general {
     public function __set( $property, $value ) {
         if (property_exists($this, $property)) {
             $this->$property = $value;        
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0002', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -44,8 +41,7 @@ class Class_general {
     public function __isset( $property ) {
         if (property_exists($this, $property)) {
             return isset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0003', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -53,8 +49,7 @@ class Class_general {
     public function __unset( $property ) {
         if (property_exists($this, $property)) {
             unset($this->$property);
-        }
-        else {
+        } else {
             throw new Exception($this->get_exception('0004', __FUNCTION__, __LINE__, 'Get Property not exist ['.$property.']'));
         }
     }
@@ -76,8 +71,7 @@ class Class_general {
                 return '';
             }
             return $param;
-        }
-        catch(Exception $ex) {
+        } catch(Exception $ex) {
             $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
             throw new Exception($this->get_exception('0051', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
@@ -95,23 +89,17 @@ class Class_general {
             
             if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']!='') {
                 $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-            } 
-            else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']!='') {
+            } else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']!='') {
                 $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } 
-            else if(isset($_SERVER['HTTP_X_FORWARDED']) && $_SERVER['HTTP_X_FORWARDED']!='') {
+            } else if(isset($_SERVER['HTTP_X_FORWARDED']) && $_SERVER['HTTP_X_FORWARDED']!='') {
                 $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-            } 
-            else if(isset($_SERVER['HTTP_FORWARDED_FOR']) && $_SERVER['HTTP_FORWARDED_FOR']!='') {
+            } else if(isset($_SERVER['HTTP_FORWARDED_FOR']) && $_SERVER['HTTP_FORWARDED_FOR']!='') {
                 $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-            } 
-            else if(isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED']!='') {
+            } else if(isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED']!='') {
                 $ipaddress = $_SERVER['HTTP_FORWARDED'];
-            } 
-            else if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']!='') {
+            } else if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']!='') {
                 $ipaddress = $_SERVER['REMOTE_ADDR'];
-            } 
-            else {
+            } else {
                 $ipaddress = 'UNKNOWN';
             }
             
@@ -122,8 +110,7 @@ class Class_general {
                 }
             }
             return Class_db::getInstance()->db_insert('sys_audit', array('audit_action_id'=>$audit_action_id, 'user_id'=>$user_id, 'audit_ip'=>$ipaddress, 'audit_place'=>$place, 'audit_remark'=>$remark));
-        }
-        catch(Exception $ex) {
+        } catch(Exception $ex) {
             $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
             throw new Exception($this->get_exception('0051', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
@@ -139,8 +126,7 @@ class Class_general {
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
             }
             return $randomString;
-        }
-        catch(Exception $ex) {
+        } catch(Exception $ex) {
             $this->log_error(__FUNCTION__, __LINE__, $ex->getMessage());            
             throw new Exception($this->get_exception('0051', __FUNCTION__, __LINE__, $ex->getMessage()), $ex->getCode());
         }
