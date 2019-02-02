@@ -922,6 +922,8 @@
     // Material Select Initialization
     $(document).ready(function () {
       $('.mdb-select').material_select();
+      
+      FileList.prototype.forEach = function(callback) {[].forEach.call(this, callback)};
     });
 
   </script>

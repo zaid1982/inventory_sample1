@@ -277,7 +277,7 @@
                             if (!formRegRegisterValidate.validateForm()) {
                                 throw new Error(_ALERT_MSG_VALIDATION);
                             }   
-                            let data = {
+                            const data = {
                                 action: 'register',
                                 userFirstName: $('#txtRegFirstName').val(),
                                 userLastName: $('#txtRegLastName').val(),

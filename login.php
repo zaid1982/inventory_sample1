@@ -190,7 +190,7 @@
                     ShowLoader();
                     setTimeout(function () {
                         try {
-                            let data = {
+                            const data = {
                                 action: 'activate',
                                 activationInput: getVarKey
                             };
@@ -240,7 +240,7 @@
                             if (!formLgnLoginValidate.validateForm()) {
                                 throw new Error(_ALERT_MSG_VALIDATION);
                             }                            
-                            let data = {
+                            const data = {
                                 username: $('#txtLgnUsername').val(),
                                 password: $('#txtLgnPassword').val()
                             };                                
@@ -295,7 +295,7 @@
                             if (!formMfpValidate.validateForm()) {
                                 throw new Error(_ALERT_MSG_VALIDATION);
                             }
-                            let data = {
+                            const data = {
                                 action: 'forgot_password',
                                 username: $('#txtMfpUserId').val()
                             };
